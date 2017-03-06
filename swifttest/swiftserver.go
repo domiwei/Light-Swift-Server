@@ -110,9 +110,11 @@ func (srv *SwiftServer) resourceForURL(u *url.URL) (r resource) {
 }
 
 func NewSwiftServer() (*SwiftServer, error) {
-	listener, err := net.Listen("tcp", ":8080")
+	port := ":8081"
+	listener, err := net.Listen("tcp", port)
 	if err != nil {
-		return nil, fmt.Errorf("cannot listen on %s: %v", listener.Addr(), err)
+		fmt.Println("Fail to listen.", err)
+		return nil, fmt.Errorf("cannot listen: %v", err)
 	}
 
 	// Get working ip by using the local ip
@@ -130,8 +132,8 @@ func NewSwiftServer() (*SwiftServer, error) {
 
 	server := &SwiftServer{
 		Listener: listener,
-		AuthURL:  "http://" + listenIP + ":8080/auth/v1.0",
-		URL:      "http://" + listenIP + ":8080/auth/v1",
+		AuthURL:  "http://" + listenIP + port + "/auth/v1.0",
+		URL:      "http://" + listenIP + port + "/auth/v1",
 		Accounts: make(map[string]*account),
 		Sessions: make(map[string]*session),
 	}
