@@ -300,6 +300,7 @@ func (objr objectResource) put(a *action) interface{} {
 	obj.Mtime = time.Now().UTC()
 	objr.container.Objects[objr.name] = obj
 	objr.container.Bytes += len(data)
+	objr.container.DirtyDataBytes += len(data) //Statistics of dirty size
 	a.user.BytesUsed += int64(len(data))
 
 	h := a.w.Header()

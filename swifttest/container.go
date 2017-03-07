@@ -27,6 +27,8 @@ type Container struct {
 	Ctime   time.Time
 	Objects map[string]*Object
 	Bytes   int
+	DirtyDataBytes int `dirty + clean = Bytes`
+	CleanDataBytes int
 }
 
 func (c Container) list(delimiter string, marker string, prefix string, parent string) (resp []interface{}) {
