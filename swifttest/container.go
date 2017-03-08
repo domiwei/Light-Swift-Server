@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"sync"
 )
 
 // The Key type represents an item stored in an container.
@@ -25,7 +26,9 @@ type Container struct {
 	Metadata
 	Name    string
 	Ctime   time.Time
+	objRWLock *sync.RWMutex // Lock for object map
 	Objects map[string]*Object
+	ioMonitor *IOMonitor // It may be nil when data is not dirty enough
 	Bytes   int
 	DirtyDataBytes int `dirty + clean = Bytes`
 	CleanDataBytes int
