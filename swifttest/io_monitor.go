@@ -10,12 +10,10 @@ import (
 
 type IOMonitor struct {
 		dirtyBytesThreshold int
+		monitor_owner *Container // Point to container
 }
 
-func (monitor IOMonitor) checkWrite(objr *objectResource) interface{} {
-		if objr.container.DirtyDataBytes > monitor.dirtyBytesThreshold {
-			// TODO: begin to write data
-		}
+func (monitor *IOMonitor) flushDirtyData() interface{} {
 
 		return nil
 }

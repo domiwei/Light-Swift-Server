@@ -302,6 +302,7 @@ func (objr objectResource) put(a *action) interface{} {
 	objr.container.Bytes += len(data)
 	objr.container.DirtyDataBytes += len(data) //Statistics of dirty size
 	a.user.BytesUsed += int64(len(data))
+	objr.container.checkIfNeedIOMonitor()
 
 	h := a.w.Header()
 	h.Set("ETag", hex.EncodeToString(obj.Checksum))

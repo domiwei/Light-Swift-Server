@@ -26,12 +26,16 @@ type Container struct {
 	Metadata
 	Name    string
 	Ctime   time.Time
+
 	objRWLock *sync.RWMutex // Lock for object map
 	Objects map[string]*Object
 	ioMonitor *IOMonitor // It may be nil when data is not dirty enough
+	ioMonitorRunning bool
+
 	Bytes   int
 	DirtyDataBytes int `dirty + clean = Bytes`
 	CleanDataBytes int
+	dirtyBytesThreshold int // DirtyThreshold
 }
 
 func (c Container) list(delimiter string, marker string, prefix string, parent string) (resp []interface{}) {
@@ -109,4 +113,25 @@ func validContainerName(name string) bool {
 func saveContainerToDisk(userName string, containerName string, c *Container) {
 	path := fmt.Sprintf("./testData/%s/%s", userName, containerName)
 	io.Save(path, c)
+}
+
+func (c *Container) checkIfNeedIOMonitor() interface{} {
+	if c.DirtyDataBytes > c.dirtyBytesThreshold {
+		// Check if monitor is running
+		if c.ioMonitorRunning == true {
+			return nil
+		}
+
+		c.objRWLock.Lock()
+		defer c.objRWLock.Unlock()
+
+		// Check again before new a monitor
+		if c.ioMonitorRunning == true {
+			return nil
+		}
+		c.ioMonitor = &IOMonitor{c.dirtyBytesThreshold, c}
+		go c.ioMonitor.flushDirtyData()
+	}
+
+	return nil
 }
