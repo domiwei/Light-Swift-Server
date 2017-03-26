@@ -107,13 +107,7 @@ func (r containerResource) put(a *action) interface{} {
 		if !validContainerName(r.name) {
 			fatalf(400, "InvalidContainerName", "The specified container is not valid")
 		}
-		r.container = &Container{
-			Name:    r.name,
-			Objects: make(map[string]*Object),
-			Metadata: Metadata{
-				Meta: make(http.Header),
-			},
-		}
+		r.container = NewContainer(r.name)
 		r.container.setMetadata(a, CONTAINER_TYPE)
 		a.user.Containers[r.name] = r.container
 		a.user.Account.Containers++
@@ -130,13 +124,7 @@ func (r containerResource) post(a *action) interface{} {
 		if !validContainerName(r.name) {
 			fatalf(400, "InvalidContainerName", "The specified container is not valid")
 		}
-		r.container = &Container{
-			Name:    r.name,
-			Objects: make(map[string]*Object),
-			Metadata: Metadata{
-				Meta: make(http.Header),
-			},
-		}
+		r.container = NewContainer(r.name)
 		r.container.setMetadata(a, CONTAINER_TYPE)
 		a.user.Containers[r.name] = r.container
 		a.user.Account.Containers++

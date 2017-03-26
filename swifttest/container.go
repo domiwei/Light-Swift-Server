@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 	"sync"
+	"net/http"
 )
 
 // The Key type represents an item stored in an container.
@@ -115,6 +116,20 @@ func saveContainerToDisk(userName string, containerName string, c *Container) {
 	io.Save(path, c)
 }
 
+// Container constructor
+func NewContainer(name string) *Container {
+	return &Container{
+			Name:    name,
+			Objects: make(map[string]*Object),
+			Metadata: Metadata{
+				Meta: make(http.Header),
+			},
+			objRWLock: new(sync.RWMutex),
+		}
+}
+
+
+// Check if need to flush dirty data
 func (c *Container) checkIfNeedIOMonitor() interface{} {
 	if c.DirtyDataBytes > c.dirtyBytesThreshold {
 		// Check if monitor is running
