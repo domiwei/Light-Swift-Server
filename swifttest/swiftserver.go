@@ -140,7 +140,7 @@ func NewSwiftServer() (*SwiftServer, error) {
 
 	server.Accounts[TEST_ACCOUNT] = &account{
 		password: TEST_ACCOUNT,
-		Metadata: Metadata{
+		Metadata: Metadata {
 			Meta: make(http.Header),
 		},
 		Containers: make(map[string]*Container),

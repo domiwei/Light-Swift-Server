@@ -130,6 +130,7 @@ func (s *SwiftServer) serveHTTP(w http.ResponseWriter, req *http.Request) {
 					panic(notAuthorized())
 				}
 				// Assign account to action
+				// TODO: pass username?
 				a.user = s.Accounts[session.username]
 			}
 			if DEBUG {

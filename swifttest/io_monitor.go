@@ -10,10 +10,20 @@ import (
 
 type IOMonitor struct {
 		dirtyBytesThreshold int
-		monitor_owner *Container // Point to container
+		ownerContainer *Container // Point to container
 }
 
 func (monitor *IOMonitor) flushDirtyData() interface{} {
+	monitor.ownContainer.objRWLock.RLock()
+	defer monitor.ownContainer.objRWLock.RUnlock()
 
-		return nil
+	for objname, data := range monitor.ownContainer.Objects {
+			
+	}
+	return nil
+}
+
+func (monitor *IOMonitor) writeDataToDisk(c *Container, objname *string, data *object) {
+	path := fmt.Sprintf("./testData/%s/%s", c.userName, c.containerName)
+	io.Save(path, data)
 }
